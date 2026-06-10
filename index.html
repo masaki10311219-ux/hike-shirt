@@ -27,6 +27,8 @@ h1 em{font-style:italic;color:var(--fine)}
 .filter-btn.marble.active{background:var(--marble);border-color:var(--marble)}
 .filter-btn.fine.active{background:var(--fine);border-color:var(--fine)}
 .color-filter-wrap{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.color-group-label{font-size:10px;color:var(--muted);margin:8px 0 4px;display:block;letter-spacing:.05em}
+.color-group-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:2px}
 .color-dot-btn{width:24px;height:24px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:transform .15s,border-color .15s;outline:none;position:relative}
 .color-dot-btn:hover{transform:scale(1.18)}
 .color-dot-btn.active{border-color:var(--text);transform:scale(1.18)}
@@ -197,7 +199,21 @@ const IMG = {
 
 const PATTERNS = [{"id": 1, "dye": "マーブル", "colors": ["ベビーレモンイエロー", "ベビーコーラルピンク", "ベビーパープル"]}, {"id": 2, "dye": "ファインストーン", "colors": ["ベビーゴールデンイエロー", "ベビーブルーバイオレット"]}, {"id": 3, "dye": "マーブル", "colors": ["ベビーグレー", "ベビーレモンイエロー", "ベビーコーラルピンク"]}, {"id": 4, "dye": "ファインストーン", "colors": ["ベビーグレー", "ベビーパープル"]}, {"id": 5, "dye": "マーブル", "colors": ["ベビーレモンイエロー", "ベビーコーラルピンク", "ベビーパープル"]}, {"id": 6, "dye": "ファインストーン", "colors": ["ベビーゴールデンイエロー", "ベビーブルーバイオレット"]}, {"id": 7, "dye": "マーブル", "colors": ["ベビーモスグリーン", "ベビーレモンイエロー", "ベビーコーラルピンク"]}, {"id": 8, "dye": "ファインストーン", "colors": ["ベビーモスグリーン", "ベビーレモンイエロー"]}, {"id": 9, "dye": "マーブル", "colors": ["ベビーパープル", "ベビーコーラルピンク", "ベビーグレー"]}, {"id": 10, "dye": "マーブル", "colors": ["ベビーパープル", "ベビーコーラルピンク", "ベビーベージュ"]}, {"id": 11, "dye": "ファインストーン", "colors": ["ベビーパープル", "ベビーコーラルピンク"]}, {"id": 12, "dye": "マーブル", "colors": ["ベビーマスカット", "ベビーコーラルピンク", "ベビーパープル"]}, {"id": 13, "dye": "ファインストーン", "colors": ["ベビーマスカット", "ベビーコーラルピンク"]}, {"id": 14, "dye": "マーブル", "colors": ["ターコイズ(濃)", "パープル(濃)", "ブラック"]}, {"id": 15, "dye": "ファインストーン", "colors": ["ターコイズ(濃)", "パープル(濃)"]}, {"id": 16, "dye": "マーブル", "colors": ["ベビーゴールデンイエロー", "ベビーマスカット", "ベビーグレー"]}, {"id": 17, "dye": "マーブル", "colors": ["ベビーゴールデンイエロー", "ベビーマスカット", "ベビーコーラルピンク"]}, {"id": 18, "dye": "ファインストーン", "colors": ["ベビーゴールデンイエロー", "ベビーマスカット"]}, {"id": 19, "dye": "マーブル", "colors": ["ライトモスグリーン(濃)", "ライトゴールデンイエロー(濃)", "ディープコーラル"]}, {"id": 20, "dye": "ファインストーン", "colors": ["ライトモスグリーン(濃)", "ライトゴールデンイエロー(濃)"]}, {"id": 21, "dye": "ファインストーン", "colors": ["ベビーオレンジ", "ベビーレモンイエロー"]}, {"id": 22, "dye": "ファインストーン", "colors": ["ベビーホットピンク", "ベビーパープル"]}, {"id": 23, "dye": "ファインストーン", "colors": ["ベビーブルーバイオレット", "ベビーターコイズ"]}, {"id": 24, "dye": "ファインストーン", "colors": ["ベビーベージュ", "ベビーコーラルピンク"]}, {"id": 25, "dye": "ファインストーン", "colors": ["ベビーベージュ", "ベビーモスグリーン"]}, {"id": 26, "dye": "ファインストーン", "colors": ["ベビーベージュ", "ベビーパープル"]}, {"id": 27, "dye": "マーブル", "colors": ["モスグリーン", "ライトホットピンク", "ライトレモンイエロー"]}, {"id": 28, "dye": "ファインストーン", "colors": ["モスグリーン", "ライトホットピンク"]}, {"id": 29, "dye": "ファインストーン", "colors": ["ターコイズ", "ベビーオレンジ"]}, {"id": 30, "dye": "ファインストーン", "colors": ["ライトレッド", "ライトマスカット"]}, {"id": 31, "dye": "マーブル", "colors": ["ベビーレッド", "ベビーマスカット", "ベビーレモンイエロー"]}, {"id": 32, "dye": "マーブル", "colors": ["ライトパープル", "ライトターコイズ", "ライトホットピンク"]}, {"id": 33, "dye": "マーブル", "colors": ["ベビーフォレストグリーン", "ベビーゴールデンイエロー", "ベビーオレンジ"]}, {"id": 34, "dye": "マーブル", "colors": ["モスグリーン", "ホットピンク", "ゴールデンイエロー"]}, {"id": 35, "dye": "マーブル", "colors": ["パープル", "ターコイズ", "レモンイエロー"]}, {"id": 36, "dye": "マーブル", "colors": ["ライトレッド", "ライトマスカット", "ライトブルーバイオレット"]}, {"id": 37, "dye": "マーブル", "colors": ["ベビーターコイズ", "ベビーゴールデンイエロー", "ベビーコーラルピンク"]}, {"id": 38, "dye": "マーブル", "colors": ["ライトオレンジ", "ライトグリーン", "ライトパープル"]}, {"id": 39, "dye": "マーブル", "colors": ["ベビーモスグリーン", "ベビーホットピンク", "ベビーレモンイエロー"]}, {"id": 40, "dye": "マーブル", "colors": ["ライトフォレストグリーン", "ライトコーラルピンク", "ライトゴールデンイエロー"]}, {"id": 41, "dye": "マーブル", "colors": ["レッド", "ゴールデンイエロー", "ベビースカイブルー"]}, {"id": 42, "dye": "マーブル", "colors": ["ライトレッド", "ライトゴールデンイエロー", "ライトターコイズ"]}, {"id": 43, "dye": "マーブル", "colors": ["ベビーブルーバイオレット", "ベビーコーラルピンク", "ベビーレモンイエロー"]}, {"id": 44, "dye": "マーブル", "colors": ["ブルーバイオレット", "オレンジ", "グリーン"]}, {"id": 45, "dye": "マーブル", "colors": ["ライトブルーバイオレット", "ライトオレンジ", "ライトモスグリーン"]}, {"id": 46, "dye": "ファインストーン", "colors": ["レッド", "ゴールデンイエロー"]}, {"id": 47, "dye": "ファインストーン", "colors": ["ブルーバイオレット", "オレンジ"]}, {"id": 48, "dye": "ファインストーン", "colors": ["ライトブルーバイオレット", "ライトゴールデンイエロー"]}, {"id": 49, "dye": "マーブル", "colors": ["ブルーバイオレット", "オレンジ", "ライトコーラルピンク"]}, {"id": 50, "dye": "マーブル", "colors": ["ブルーバイオレット", "オレンジ", "ライトマスカット"]}, {"id": 51, "dye": "マーブル", "colors": ["ブルーバイオレット", "オレンジ", "ライトターコイズ"]}];
 
-const COLOR_HEX = {"ベビーレモンイエロー": "#F9F0A0", "ベビーゴールデンイエロー": "#F5D97A", "ベビーオレンジ": "#F9C49A", "ベビーコーラルピンク": "#F5B5A8", "ベビーホットピンク": "#F0AABF", "ベビーパープル": "#C8B8E8", "ベビーブルーバイオレット": "#B8C8E8", "ベビーターコイズ": "#A8D8D8", "ベビーモスグリーン": "#B8D4B0", "ベビーマスカット": "#C8E0A0", "ベビーグレー": "#D0D0D0", "ベビーベージュ": "#E8D8C0", "ターコイズ(濃)": "#00B8B8", "パープル(濃)": "#6030B0", "ブラック": "#1a1a1a", "ライトモスグリーン(濃)": "#5A8050", "ライトゴールデンイエロー(濃)": "#D4A020", "ディープコーラル": "#E06040"};
+const COLOR_HEX = {
+  "ベビーレモンイエロー":"#F9F0A0","ライトレモンイエロー":"#EEE860","レモンイエロー":"#E0DC10",
+  "ベビーゴールデンイエロー":"#F5D97A","ライトゴールデンイエロー":"#ECC840","ライトゴールデンイエロー(濃)":"#D4A020","ゴールデンイエロー":"#C88010",
+  "ベビーオレンジ":"#F9C49A","ライトオレンジ":"#F0A060","オレンジ":"#E86010",
+  "ベビーコーラルピンク":"#F5B5A8","ライトコーラルピンク":"#F08070","ディープコーラル":"#E06040",
+  "ベビーホットピンク":"#F0AABF","ライトホットピンク":"#F070A0","ホットピンク":"#E0206A",
+  "ベビーレッド":"#F5A0A0","ライトレッド":"#E86060","レッド":"#D02020",
+  "ベビーパープル":"#C8B8E8","ライトパープル":"#A878D8","パープル":"#7030C0","パープル(濃)":"#5020A0",
+  "ベビースカイブルー":"#A8D0E8","ベビーブルーバイオレット":"#B8C8E8","ライトブルーバイオレット":"#8090D8","ブルーバイオレット":"#3838B0",
+  "ベビーターコイズ":"#A8D8D8","ライトターコイズ":"#60C8C8","ターコイズ":"#00B0C0","ターコイズ(濃)":"#0098A8",
+  "ベビーマスカット":"#C8E0A0","ライトマスカット":"#A0D060","ライトグリーン":"#88CC60","グリーン":"#30A030",
+  "ベビーモスグリーン":"#B8D4B0","ライトモスグリーン":"#80A878","モスグリーン":"#4A6840","ライトモスグリーン(濃)":"#5A8050",
+  "ベビーフォレストグリーン":"#A8C8A0","ライトフォレストグリーン":"#6A9868",
+  "ベビーベージュ":"#E8D8C0","ベビーグレー":"#D0D0D0","ブラック":"#1a1a1a"
+};
 
 
 let activeDye = 'all';
@@ -206,13 +222,23 @@ let currentModalIdx = 0;
 let visiblePatterns = [...PATTERNS];
 
 // build color dots
-const allColors = [...new Set(PATTERNS.flatMap(p=>p.colors))].sort();
+const usedColors = new Set(PATTERNS.flatMap(p=>p.colors));
 const cfWrap = document.getElementById('colorFilters');
-allColors.forEach(c=>{
-  const btn=document.createElement('button');
-  btn.className='color-dot-btn'; btn.title=c;
-  btn.style.background=COLOR_HEX[c]||'#ccc'; btn.dataset.color=c;
-  cfWrap.appendChild(btn);
+COLOR_GROUPS.forEach(group=>{
+  const groupColors = group.colors.filter(c=>usedColors.has(c));
+  if(!groupColors.length) return;
+  const label=document.createElement('span');
+  label.className='color-group-label'; label.textContent=group.label;
+  cfWrap.appendChild(label);
+  const row=document.createElement('div');
+  row.className='color-group-row';
+  groupColors.forEach(c=>{
+    const btn=document.createElement('button');
+    btn.className='color-dot-btn'; btn.title=c;
+    btn.style.background=COLOR_HEX[c]||'#ccc'; btn.dataset.color=c;
+    row.appendChild(btn);
+  });
+  cfWrap.appendChild(row);
 });
 
 // build cards
