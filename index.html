@@ -14,7 +14,7 @@ header{padding:48px 40px 36px;border-bottom:1px solid var(--border);position:rel
 header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 90% 50%,rgba(200,169,126,.12) 0%,transparent 70%),radial-gradient(ellipse 40% 60% at 10% 20%,rgba(180,210,200,.15) 0%,transparent 60%);pointer-events:none}
 .header-inner{max-width:1200px;margin:0 auto;position:relative}
 .brand-line{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(28px,4vw,52px);line-height:1.1}
+h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(28px,4vw,52px);line-height:1.1;white-space:nowrap}
 h1 em{font-style:italic;color:var(--fine)}
 .header-meta{margin-top:14px;font-size:11px;color:var(--muted);letter-spacing:.06em;display:flex;gap:20px;flex-wrap:wrap}
 .header-meta span::before{content:'— '}
@@ -106,7 +106,7 @@ h1 em{font-style:italic;color:var(--fine)}
 <header>
   <div class="header-inner">
     <p class="brand-line">Coolmax × Wool Blend</p>
-    <h1>Tie-Dye<br><em>Catalog</em></h1>
+    <h1>Tie-Dye <em>Catalog</em></h1>
     <div class="header-meta">
       <span>全26パターン</span>
       <span>マーブル / ファインストーン</span>
