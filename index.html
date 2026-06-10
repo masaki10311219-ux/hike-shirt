@@ -90,7 +90,15 @@ h1 em{font-style:italic;color:var(--fine)}
   .modal-box{max-width:95vw}
   .modal-img{max-width:90vw;max-height:65vh}
 }
+
+.vote-btn{display:flex;align-items:center;gap:6px;margin-top:10px;padding:6px 14px;border:1.5px solid #e0d8d0;border-radius:20px;background:none;cursor:pointer;font-size:0.85rem;color:#888;transition:all .2s;width:fit-content}
+.vote-btn:active{transform:scale(0.93)}
+.vote-btn.voted{border-color:#e85d75;color:#e85d75;background:#fff0f3}
+.vote-btn.voted .heart{color:#e85d75}
+.heart{font-size:1rem;transition:transform .2s}
+.vote-btn.voted .heart{content:"♥"}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <header>
@@ -226,6 +234,7 @@ PATTERNS.forEach(p=>{
       </div>
       <div class="color-chips">${chips}</div>
       <div class="color-names">${p.colors.join(' × ')}</div>
+      <button class="vote-btn" data-id="${p.id}" onclick="toggleVote(event,${p.id})"><span class="heart">♡</span><span class="vote-count">0</span></button>
     </div>`;
   card.addEventListener('click',()=>openModal(p.id));
   grid.appendChild(card);
