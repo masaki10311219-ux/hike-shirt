@@ -19,16 +19,35 @@ h1 em{font-style:italic;color:var(--fine)}
 .header-meta{margin-top:14px;font-size:11px;color:var(--muted);letter-spacing:.06em;display:flex;gap:20px;flex-wrap:wrap}
 .header-meta span::before{content:'— '}
 
-.filters-wrap{max-width:1200px;margin:28px auto 0;padding:0 40px 28px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--border)}
-.filter-label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-right:2px}
+/* ── STICKY FILTER BAR ── */
+.filter-bar{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.filter-bar-inner{max-width:1200px;margin:0 auto;padding:0 40px}
+.filter-summary-row{display:flex;align-items:center;gap:10px;padding:10px 0;flex-wrap:wrap}
+.filter-toggle-btn{display:flex;align-items:center;gap:6px;background:none;border:1px solid var(--border);border-radius:100px;padding:6px 16px;font-family:'Noto Sans JP',sans-serif;font-size:12px;cursor:pointer;color:var(--text);transition:all .2s;white-space:nowrap;flex-shrink:0}
+.filter-toggle-btn:hover{border-color:#aaa}
+.filter-toggle-btn.open{background:var(--text);color:#fff;border-color:var(--text)}
+.filter-chevron{font-size:9px;transition:transform .25s;display:inline-block}
+.filter-toggle-btn.open .filter-chevron{transform:rotate(180deg)}
+.active-chips{display:flex;gap:6px;flex-wrap:wrap;flex:1}
+.active-chip{display:inline-flex;align-items:center;gap:5px;background:#f0ece8;border-radius:100px;padding:4px 10px 4px 12px;font-size:11px;color:var(--text)}
+.active-chip-remove{background:none;border:none;cursor:pointer;padding:0;line-height:1;color:#aaa;font-size:14px;transition:color .15s}
+.active-chip-remove:hover{color:var(--text)}
+.filter-clear-btn{padding:5px 14px;border-radius:100px;border:1px solid #e85d75;background:none;color:#e85d75;font-family:'Noto Sans JP',sans-serif;font-size:11px;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.filter-clear-btn:hover{background:#e85d75;color:#fff}
+.filter-panel{overflow:hidden;max-height:0;transition:max-height .35s cubic-bezier(.4,0,.2,1),padding .35s}
+.filter-panel.open{max-height:800px;padding-bottom:20px}
+.filter-row{display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.filter-row:last-child{margin-bottom:0}
+.filter-label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-right:2px;padding-top:7px;white-space:nowrap}
 .filter-btn{padding:6px 16px;border-radius:100px;border:1px solid var(--border);background:white;font-family:'Noto Sans JP',sans-serif;font-size:12px;cursor:pointer;transition:all .2s;color:var(--text)}
 .filter-btn:hover{border-color:#aaa}
 .filter-btn.active{background:var(--text);color:white;border-color:var(--text)}
 .filter-btn.marble.active{background:var(--marble);border-color:var(--marble)}
 .filter-btn.fine.active{background:var(--fine);border-color:var(--fine)}
-.color-filter-wrap{display:block;width:100%;margin-top:8px}
-.color-group-label{font-size:10px;color:var(--muted);margin:8px 0 4px;display:block;letter-spacing:.05em}
-.color-group-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:2px}
+.color-filter-wrap{display:block;flex:1}
+.color-group-label{font-size:10px;color:var(--muted);margin:6px 0 4px;display:block;letter-spacing:.05em}
+.color-group-label:first-child{margin-top:0}
+.color-group-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
 .color-dot-btn{width:24px;height:24px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:transform .15s,border-color .15s;outline:none;position:relative}
 .color-dot-btn:hover{transform:scale(1.18)}
 .color-dot-btn.active{border-color:var(--text);transform:scale(1.18)}
@@ -85,7 +104,8 @@ h1 em{font-style:italic;color:var(--fine)}
 .swipe-hint{position:absolute;bottom:-32px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.3);font-size:10px;letter-spacing:.15em;white-space:nowrap}
 
 @media(max-width:600px){
-  header,.filters-wrap,.count-bar,.grid{padding-left:16px;padding-right:16px}
+  header,.count-bar,.grid{padding-left:16px;padding-right:16px}
+  .filter-bar-inner{padding:0 16px}
   .grid{grid-template-columns:repeat(2,1fr);gap:12px}
   .card-body{padding:10px}
   .modal-nav{display:none}
@@ -113,13 +133,26 @@ h1 em{font-style:italic;color:var(--fine)}
     </div>
   </div>
 </header>
-<div class="filters-wrap">
-  <span class="filter-label">染め柄</span>
-  <button class="filter-btn active" data-dye="all">すべて</button>
-  <button class="filter-btn marble" data-dye="マーブル">マーブル</button>
-  <button class="filter-btn fine" data-dye="ファインストーン">ファインストーン</button>
-  <span class="filter-label" style="margin-left:12px">カラー</span>
-  <div class="color-filter-wrap" id="colorFilters"></div>
+<div class="filter-bar" id="filterBar">
+  <div class="filter-bar-inner">
+    <div class="filter-summary-row">
+      <button class="filter-toggle-btn" id="filterToggle">絞り込み <span class="filter-chevron">▾</span></button>
+      <div class="active-chips" id="activeChips"></div>
+      <button class="filter-clear-btn" id="filterClear" style="display:none">クリア</button>
+    </div>
+    <div class="filter-panel" id="filterPanel">
+      <div class="filter-row">
+        <span class="filter-label">染め柄</span>
+        <button class="filter-btn active" data-dye="all">すべて</button>
+        <button class="filter-btn marble" data-dye="マーブル">マーブル</button>
+        <button class="filter-btn fine" data-dye="ファインストーン">ファインストーン</button>
+      </div>
+      <div class="filter-row">
+        <span class="filter-label">カラー</span>
+        <div class="color-filter-wrap" id="colorFilters"></div>
+      </div>
+    </div>
+  </div>
 </div>
 <div class="count-bar" id="countBar">51 パターン表示中</div>
 <div class="grid" id="grid"></div>
@@ -293,8 +326,60 @@ function applyFilters(){
     el.textContent='該当するパターンがありません';grid.appendChild(el);
   }
   document.getElementById('countBar').textContent=
-    visiblePatterns.length===26?'26 パターン表示中':`${visiblePatterns.length} / 26 パターン表示中`;
+    visiblePatterns.length===51?'51 パターン表示中':`${visiblePatterns.length} / 51 パターン表示中`;
+  updateFilterUI();
 }
+
+function updateFilterUI(){
+  const chips=document.getElementById('activeChips');
+  const clearBtn=document.getElementById('filterClear');
+  chips.innerHTML='';
+  const hasFilter=activeDye!=='all'||activeColor;
+  clearBtn.style.display=hasFilter?'':'none';
+  if(activeDye!=='all'){
+    const chip=document.createElement('span');chip.className='active-chip';
+    chip.innerHTML=`${activeDye}<button class="active-chip-remove" title="解除">×</button>`;
+    chip.querySelector('button').addEventListener('click',()=>{
+      activeDye='all';
+      document.querySelectorAll('[data-dye]').forEach(b=>b.classList.remove('active'));
+      document.querySelector('[data-dye="all"]').classList.add('active');
+      applyFilters();
+    });
+    chips.appendChild(chip);
+  }
+  if(activeColor){
+    const chip=document.createElement('span');chip.className='active-chip';
+    chip.style.gap='8px';
+    const dot=document.createElement('span');
+    dot.style.cssText=`width:10px;height:10px;border-radius:50%;background:${COLOR_HEX[activeColor]||'#ccc'};flex-shrink:0`;
+    const txt=document.createTextNode(activeColor);
+    const rmBtn=document.createElement('button');rmBtn.className='active-chip-remove';rmBtn.title='解除';rmBtn.textContent='×';
+    rmBtn.addEventListener('click',()=>{
+      activeColor=null;
+      document.querySelectorAll('.color-dot-btn').forEach(b=>b.classList.remove('active'));
+      applyFilters();
+    });
+    chip.appendChild(dot);chip.appendChild(txt);chip.appendChild(rmBtn);
+    chips.appendChild(chip);
+  }
+}
+
+// toggle panel
+document.getElementById('filterToggle').addEventListener('click',()=>{
+  const panel=document.getElementById('filterPanel');
+  const btn=document.getElementById('filterToggle');
+  panel.classList.toggle('open');
+  btn.classList.toggle('open');
+});
+
+// clear all
+document.getElementById('filterClear').addEventListener('click',()=>{
+  activeDye='all';activeColor=null;
+  document.querySelectorAll('[data-dye]').forEach(b=>b.classList.remove('active'));
+  document.querySelector('[data-dye="all"]').classList.add('active');
+  document.querySelectorAll('.color-dot-btn').forEach(b=>b.classList.remove('active'));
+  applyFilters();
+});
 
 document.querySelectorAll('[data-dye]').forEach(btn=>{
   btn.addEventListener('click',()=>{
