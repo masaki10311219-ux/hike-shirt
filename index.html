@@ -259,8 +259,8 @@ const COLOR_GROUPS=[
   {label:"ニュートラル",colors:["ベビーベージュ","ベビーグレー","ブラック"]}
 ];
 
-let activeDye = 'all';
-let activeColor = null;
+let activeDyes = new Set();
+let activeColors = new Set();
 let currentModalIdx = 0;
 let visiblePatterns = [...PATTERNS];
 
@@ -314,8 +314,8 @@ function applyFilters(){
   document.querySelectorAll('.card').forEach(card=>{
     const dye=card.dataset.dye;
     const colors=JSON.parse(card.dataset.colors);
-    const dyeOk=activeDye==='all'||dye===activeDye;
-    const colorOk=!activeColor||colors.includes(activeColor);
+    const dyeOk=activeDyes.size===0||activeDyes.has(dye);
+    const colorOk=activeColors.size===0||colors.some(c=>activeColors.has(c));
     if(dyeOk&&colorOk){card.classList.remove('hidden');visiblePatterns.push(parseInt(card.dataset.id));}
     else card.classList.add('hidden');
   });
@@ -334,34 +334,37 @@ function updateFilterUI(){
   const chips=document.getElementById('activeChips');
   const clearBtn=document.getElementById('filterClear');
   chips.innerHTML='';
-  const hasFilter=activeDye!=='all'||activeColor;
+  const hasFilter=activeDyes.size>0||activeColors.size>0;
   clearBtn.style.display=hasFilter?'':'none';
-  if(activeDye!=='all'){
+  // dye chips
+  activeDyes.forEach(dye=>{
     const chip=document.createElement('span');chip.className='active-chip';
-    chip.innerHTML=`${activeDye}<button class="active-chip-remove" title="解除">×</button>`;
+    chip.innerHTML=`${dye}<button class="active-chip-remove" title="解除">×</button>`;
     chip.querySelector('button').addEventListener('click',()=>{
-      activeDye='all';
-      document.querySelectorAll('[data-dye]').forEach(b=>b.classList.remove('active'));
-      document.querySelector('[data-dye="all"]').classList.add('active');
+      activeDyes.delete(dye);
+      document.querySelector(`[data-dye="${dye}"]`).classList.remove('active');
+      if(activeDyes.size===0)document.querySelector('[data-dye="all"]').classList.add('active');
       applyFilters();
     });
     chips.appendChild(chip);
-  }
-  if(activeColor){
+  });
+  // color chips
+  activeColors.forEach(color=>{
     const chip=document.createElement('span');chip.className='active-chip';
     chip.style.gap='8px';
     const dot=document.createElement('span');
-    dot.style.cssText=`width:10px;height:10px;border-radius:50%;background:${COLOR_HEX[activeColor]||'#ccc'};flex-shrink:0`;
-    const txt=document.createTextNode(activeColor);
+    dot.style.cssText=`width:10px;height:10px;border-radius:50%;background:${COLOR_HEX[color]||'#ccc'};flex-shrink:0`;
+    const txt=document.createTextNode(color);
     const rmBtn=document.createElement('button');rmBtn.className='active-chip-remove';rmBtn.title='解除';rmBtn.textContent='×';
     rmBtn.addEventListener('click',()=>{
-      activeColor=null;
-      document.querySelectorAll('.color-dot-btn').forEach(b=>b.classList.remove('active'));
+      activeColors.delete(color);
+      const dotBtn=document.querySelector(`.color-dot-btn[data-color="${color}"]`);
+      if(dotBtn)dotBtn.classList.remove('active');
       applyFilters();
     });
     chip.appendChild(dot);chip.appendChild(txt);chip.appendChild(rmBtn);
     chips.appendChild(chip);
-  }
+  });
 }
 
 // toggle panel
@@ -374,7 +377,7 @@ document.getElementById('filterToggle').addEventListener('click',()=>{
 
 // clear all
 document.getElementById('filterClear').addEventListener('click',()=>{
-  activeDye='all';activeColor=null;
+  activeDyes.clear();activeColors.clear();
   document.querySelectorAll('[data-dye]').forEach(b=>b.classList.remove('active'));
   document.querySelector('[data-dye="all"]').classList.add('active');
   document.querySelectorAll('.color-dot-btn').forEach(b=>b.classList.remove('active'));
@@ -383,15 +386,25 @@ document.getElementById('filterClear').addEventListener('click',()=>{
 
 document.querySelectorAll('[data-dye]').forEach(btn=>{
   btn.addEventListener('click',()=>{
-    activeDye=btn.dataset.dye;
-    document.querySelectorAll('[data-dye]').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active'); applyFilters();
+    const dye=btn.dataset.dye;
+    if(dye==='all'){
+      activeDyes.clear();
+      document.querySelectorAll('[data-dye]').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+    } else {
+      document.querySelector('[data-dye="all"]').classList.remove('active');
+      if(activeDyes.has(dye)){activeDyes.delete(dye);btn.classList.remove('active');}
+      else{activeDyes.add(dye);btn.classList.add('active');}
+      if(activeDyes.size===0)document.querySelector('[data-dye="all"]').classList.add('active');
+    }
+    applyFilters();
   });
 });
 document.querySelectorAll('.color-dot-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
-    if(activeColor===btn.dataset.color){activeColor=null;btn.classList.remove('active');}
-    else{activeColor=btn.dataset.color;document.querySelectorAll('.color-dot-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+    const c=btn.dataset.color;
+    if(activeColors.has(c)){activeColors.delete(c);btn.classList.remove('active');}
+    else{activeColors.add(c);btn.classList.add('active');}
     applyFilters();
   });
 });
