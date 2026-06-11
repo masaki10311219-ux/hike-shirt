@@ -100,7 +100,6 @@ h1 em{font-style:italic;color:var(--fine)}
 .heart{font-size:1rem;transition:transform .2s}
 .vote-btn.voted .heart{content:"♥"}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <header>
@@ -108,7 +107,7 @@ h1 em{font-style:italic;color:var(--fine)}
     <p class="brand-line">Coolmax × Wool Blend</p>
     <h1>Tie-Dye <em>Catalog</em></h1>
     <div class="header-meta">
-      <span>全26パターン</span>
+      <span>全51パターン</span>
       <span>マーブル / ファインストーン</span>
       <span>Coolmax 41.3% + ウール 58.7%</span>
     </div>
@@ -122,7 +121,7 @@ h1 em{font-style:italic;color:var(--fine)}
   <span class="filter-label" style="margin-left:12px">カラー</span>
   <div class="color-filter-wrap" id="colorFilters"></div>
 </div>
-<div class="count-bar" id="countBar">26 パターン表示中</div>
+<div class="count-bar" id="countBar">51 パターン表示中</div>
 <div class="grid" id="grid"></div>
 
 <!-- Modal -->
@@ -558,5 +557,44 @@ swipeTarget.addEventListener('touchend',e=>{
   </ul>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  const SUPABASE_URL='https://kigyjcornzumtbjqxoxm.supabase.co';
+  const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpZ3lqY29ybnp1bXRianF4b3htIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwOTUzMTEsImV4cCI6MjA5NjY3MTMxMX0.LPMhfyPMaKIyg1keobtyaRNoPzw3bzzcQh7yBL6YySo';
+  const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+  let voterId=localStorage.getItem('voterId');
+  if(!voterId){voterId=crypto.randomUUID();localStorage.setItem('voterId',voterId);}
+
+  async function loadVotes(){
+    const {data:all}=await sb.from('votes').select('pattern_id');
+    const counts={};
+    if(all)all.forEach(r=>{counts[r.pattern_id]=(counts[r.pattern_id]||0)+1;});
+    const {data:mine}=await sb.from('votes').select('pattern_id').eq('voter_id',voterId);
+    const mySet=new Set(mine?mine.map(r=>r.pattern_id):[]);
+    document.querySelectorAll('.vote-btn').forEach(btn=>{
+      const id=parseInt(btn.dataset.id);
+      btn.querySelector('.vote-count').textContent=counts[id]||0;
+      if(mySet.has(id))btn.classList.add('voted');
+    });
+  }
+
+  window.toggleVote=async function(e,patternId){
+    e.stopPropagation();
+    const btn=e.currentTarget;
+    const isVoted=btn.classList.contains('voted');
+    btn.classList.toggle('voted');
+    const countEl=btn.querySelector('.vote-count');
+    countEl.textContent=parseInt(countEl.textContent)+(isVoted?-1:1);
+    if(isVoted){
+      await sb.from('votes').delete().eq('pattern_id',patternId).eq('voter_id',voterId);
+    }else{
+      await sb.from('votes').insert({pattern_id:patternId,voter_id:voterId});
+    }
+  };
+
+  loadVotes();
+})();
+</script>
 </body>
 </html>
