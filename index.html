@@ -22,13 +22,14 @@ h1 em{font-style:italic;color:var(--fine)}
 /* ── STICKY FILTER BAR ── */
 .filter-bar{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.06)}
 .filter-bar-inner{max-width:1200px;margin:0 auto;padding:0 40px}
-.filter-summary-row{display:flex;align-items:center;gap:10px;padding:10px 0;flex-wrap:wrap}
+.filter-summary-row{display:flex;align-items:center;gap:8px;padding:10px 0;min-width:0}
 .filter-toggle-btn{display:flex;align-items:center;gap:6px;background:none;border:1px solid var(--border);border-radius:100px;padding:6px 16px;font-family:'Noto Sans JP',sans-serif;font-size:12px;cursor:pointer;color:var(--text);transition:all .2s;white-space:nowrap;flex-shrink:0}
 .filter-toggle-btn:hover{border-color:#aaa}
 .filter-toggle-btn.open{background:var(--text);color:#fff;border-color:var(--text)}
 .filter-chevron{font-size:9px;transition:transform .25s;display:inline-block}
 .filter-toggle-btn.open .filter-chevron{transform:rotate(180deg)}
-.active-chips{display:flex;gap:6px;flex-wrap:wrap;flex:1}
+.active-chips{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;flex:1;min-width:0;scrollbar-width:none;-ms-overflow-style:none}
+.active-chips::-webkit-scrollbar{display:none}
 .active-chip{display:inline-flex;align-items:center;gap:5px;background:#f0ece8;border-radius:100px;padding:4px 10px 4px 12px;font-size:11px;color:var(--text)}
 .active-chip-remove{background:none;border:none;cursor:pointer;padding:0;line-height:1;color:#aaa;font-size:14px;transition:color .15s}
 .active-chip-remove:hover{color:var(--text)}
